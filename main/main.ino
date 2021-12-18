@@ -4,8 +4,11 @@
 #define PWM_PIN4 9 //Notte
 
 #define DAY_HOURS 24
-#define CYCLE_TIMEOUT 300
-#define CYCLE_INCREMENT 600
+#define CYCLE_TIMEOUT 500
+#define CYCLE_INCREMENT 480
+
+//240: circa 6 minuti per una giornata
+//480: circa tre minuti per una giornata
 
 int cycleCount=0;
 

@@ -11,11 +11,11 @@ void sunrise(long hourOfDay,long period){
       internalHourSunrise=hourOfDay;
     }
     int uno=hourOfDay-internalHourSunrise;
-    uno=period-uno;
+    //uno=period-uno;
     //Serial.println(hourOfDay);
     //Serial.println(internalHourSunrise);
     //Serial.println(uno);
-    valueSunrise+=255/uno;
+    valueSunrise=(period/255)*uno;
     Serial.write("SUNRISE: ");
     Serial.println(valueSunrise);
   }
@@ -34,10 +34,10 @@ void sunset(long hourOfDay,long period){
     int uno=hourOfDay-internalHourSunset;
     uno=period-uno;
     Serial.println(uno);
-    valueSunset+=255/uno;
+    valueSunset=(period/255)*uno;
     Serial.write("SUNSET: ");
     Serial.println(valueSunset);
-  }
+  } 
   
 }
 
