@@ -7,8 +7,8 @@
 #define CYCLE_TIMEOUT 500
 #define CYCLE_INCREMENT 480
 
-//240: circa 6 minuti per una giornata
-//480: circa tre minuti per una giornata
+//240: about 6 minutes to complete one day
+//480: about 3 minutes to complete one day
 
 int cycleCount=0;
 
@@ -29,46 +29,60 @@ void setup() {
   pinMode(PWM_PIN4, OUTPUT);
 }
 
-//ONE CYCLE IS ONE SECONDS
+//ONE CYCLE IS ONE SECOND
 void loop() {
   cycleCount+=CYCLE_INCREMENT;
-  Serial.write("ORA: ");
-  Serial.println(hourOfDay);
+  
+  
+  
 
   if(cycleCount>0 && (cycleCount % 60==0)){
     minute+=cycleCount/60;
     cycleCount=0;
   }
 
-  if(minute>0 && minute % 60==0){
-    minute=0;
+  if(minute>0 && minute>=60){
+    minute=minute % 60;
     if(hourOfDay==23){
       hourOfDay=0;
     }else{
       hourOfDay++;
     }
   }
-  
+  //NIGHT
   if(hourOfDay>=0 && hourOfDay<=7){
-    night();
+    night(false);
+  }//NIGHT - END
+  if(hourOfDay>7){
+    night(true);
   }
+  //SUNRISE START
   if(hourOfDay>=5 && hourOfDay<=9){
-    //PERIOD 4h
-    sunrise((hourOfDay*60)+minute,300);
+    //PERIOD 4h 
+    sunrise((hourOfDay*60)+minute,250);
   }
-  if(hourOfDay>9){
+  //SUNRISE END
+  if(hourOfDay>10){
     sunrise(hourOfDay,0);
   }
-  if(hourOfDay>=8 && hourOfDay<=19){
-    day();
+  //DAY START
+  if(hourOfDay>=9 && hourOfDay<=19){
+    day(false);
   }
+  //SUNSET START
   if(hourOfDay>=16 &&hourOfDay<=20){
     //PERIOD 4h
-    sunset((hourOfDay*60)+minute,300);
+    sunset((hourOfDay*60)+minute,250);
   }
-  if(hourOfDay>=20 && hourOfDay<=24){
-    night();
+  //DAY END
+  if(hourOfDay>19){
+    day(true);
   }
+  //NIGHT START
+  if(hourOfDay>=19 && hourOfDay<=24){
+    night(false);
+  }
+  //SUNSENT END
   if(hourOfDay>20){
     sunset(hourOfDay,0);
   }
@@ -79,6 +93,21 @@ void loop() {
   analogWrite(PWM_PIN2, valueDay);
   analogWrite(PWM_PIN3, valueSunset);
   analogWrite(PWM_PIN4, valueNight);
+
+  Serial.println("====== VALUES ======");
+  Serial.print("TIME\t\t");
+  Serial.print(hourOfDay);
+  Serial.print(":");
+  Serial.print(minute);
+  Serial.print(":");
+  Serial.println(cycleCount);
+  
+  Serial.print("valueDay\t"); Serial.println(valueDay); 
+  Serial.print("valueSunrise\t"); Serial.println(valueSunrise); 
+  Serial.print("valueSunset\t"); Serial.println(valueSunset); 
+  Serial.print("valueNight\t"); Serial.println(valueNight); 
+
+  Serial.println("===================");
 
   delay(CYCLE_TIMEOUT);
 }
