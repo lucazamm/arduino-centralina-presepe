@@ -56,12 +56,13 @@ void night(bool reset){
     valueDay=0; 
   }
 }
+
 void day(bool reset){
   //Serial.println("DAY");
   if(reset)
     valueDay=0;
   else{
-  valueDay=255;
+  valueDay=DAY_MAX_VALUE;
   valueNight=0;
   }
 }

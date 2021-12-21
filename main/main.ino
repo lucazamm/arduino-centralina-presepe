@@ -7,6 +7,8 @@
 #define CYCLE_TIMEOUT 500
 #define CYCLE_INCREMENT 480
 
+#define DAY_MAX_VALUE 200
+
 //240: about 6 minutes to complete one day
 //480: about 3 minutes to complete one day
 
