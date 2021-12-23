@@ -19,9 +19,9 @@ void sunrise(long hourOfDay,float period){
     Serial.print(uno);
     Serial.print(" - ");
     Serial.println(255/period*uno);*/
-    valueSunrise=255/period*uno;
-    if(valueSunrise>255)
-      valueSunrise=255;
+    valueSunrise=SUNRISE_MAX_VALUE/period*uno;
+    if(valueSunrise>SUNRISE_MAX_VALUE)
+      valueSunrise=SUNRISE_MAX_VALUE;
     /*Serial.print("SUNRISE: ");
     Serial.println(valueSunrise);*/
   }
@@ -57,12 +57,25 @@ void night(bool reset){
   }
 }
 
-void day(bool reset){
+int internalHourDay=0;
+
+void day(bool reset,bool decrement,float period){
   //Serial.println("DAY");
-  if(reset)
+  if(reset){
     valueDay=0;
-  else{
-  valueDay=DAY_MAX_VALUE;
-  valueNight=0;
+    internalHourDay=0;
+  }else{
+    if(!decrement){
+      valueDay=DAY_MAX_VALUE;
+      valueNight=0;
+    }else{
+      if(internalHourDay==0){
+        internalHourDay=hourOfDay;
+      }
+      int uno=hourOfDay-internalHourDay; //DIFF from previous cycle
+      valueDay-=(period/DAY_MAX_VALUE);
+      if(valueDay<0)
+        valueDay=0;
+    }
   }
 }
