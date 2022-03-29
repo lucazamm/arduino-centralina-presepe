@@ -1,37 +1,65 @@
-## Welcome to GitHub Pages
+## Centralina Presepe per Arduino
 
-You can use the [editor on GitHub](https://github.com/lucazamm/arduino-centralina-presepe/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
+L'obiettivo del progetto è stato di realizzare un algoritmo molto basilare per gestire le luci di un presepe.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+La centralina permette di eseguire, durante una giornata virtuale di 24 ore, gli scenari di:
 
-### Markdown
+- Alba
+- Giorno
+- Tramonto
+- Notte
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Note sul software
 
-```markdown
-Syntax highlighted code block
+Definisce la durata della giornata
+``` #define DAY_HOURS 24 ```
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Imposta il timeout di 125 millisecondi per ogni ciclo
+```
+#define CYCLE_TIMEOUT 125
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+Imposta di quanti millisecondi incrementare il tempo della giornata dopo ogni ciclo
+```
+#define CYCLE_INCREMENT 120
+```
 
-### Jekyll Themes
+Successivamente è calcolata l'ora del giorno e sulla base di essa sono pilotate le uscite dei Mosfet per gestire:
+- il progresso dell'alba (normalmente led bianco caldo)
+- l'accensione della luce del giorno (normalmente led bianco caldo)
+- il progresso del tramonto (normalmente led rosso)
+- l'accensione delle luci della notte (es.: le luci delle case)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/lucazamm/arduino-centralina-presepe/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Hardware necessario
 
-### Support or Contact
+**Alimentatore 12V** 
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+L'alimentatore è usato per alimentare l'arduino e le strisce LED
+
+**Striscia LED monocolore**
+
+Importante monocolore a 12V
+
+**Arduino Uno Rev 3**
+
+
+**MOSFET** per il dimmer delle strisce LED
+
+Sono caratterizzati per gestire in ingresso la tensione dell'alimentatore così da fornirla in uscita alla striscia LED secondo le direttive del software.
+
+https://www.amazon.it/ICQUANZX-interruttore-Regolazione-Interruttore-elettronico/dp/B07VRCXGFY/ref=sr_1_20?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=2XUOCD8QXUWQF&keywords=pwm+arduino&qid=1648549221&sprefix=pwm+arduino%2Caps%2C116&sr=8-20
+
+
+## Pinout
+
+Di seguito le uscite PWM di Arduino da collegare ai circuiti Mosfet.
+```
+#define PWM_PIN1 3 //Alba
+#define PWM_PIN2 5 //Giorno
+#define PWM_PIN3 6 //Tramonto
+#define PWM_PIN4 9 //Notte
+```
+
+Impostazioni sulla durata del ciclo del giorno
+
